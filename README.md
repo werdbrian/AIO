@@ -1,2 +1,2 @@
 # AIO
-Educational LeagueSharp All in One 
+Educational AIO for L# (LeagueSharp) 
