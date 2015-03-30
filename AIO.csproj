@@ -43,9 +43,6 @@
     <Reference Include="LeagueSharp.Common">
       <HintPath>C:\Users\Nathan\Desktop\Botting\League of Legends\Leaguesharp\System\LeagueSharp.Common.dll</HintPath>
     </Reference>
-    <Reference Include="Newtonsoft.Json">
-      <HintPath>C:\Users\Nathan\Desktop\Botting\League of Legends\Leaguesharp\System\Newtonsoft.Json.dll</HintPath>
-    </Reference>
     <Reference Include="SharpDX">
       <HintPath>C:\Users\Nathan\Desktop\Botting\League of Legends\Leaguesharp\System\SharpDX.dll</HintPath>
     </Reference>

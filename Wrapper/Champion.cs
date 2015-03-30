@@ -31,6 +31,17 @@ namespace AIO.Wrapper
         public abstract List<ChampionSpell> GetSpells();
 
         /// <summary>
+        ///     Virtual OnLoad for customized loading actions
+        /// </summary>
+        public virtual Action OnLoad()
+        {
+            return PerformOnce.A(() =>
+            {
+                Logger.Debug("Champion#OnLoad not implemented."); 
+            });
+        }
+
+        /// <summary>
         ///     Returns a one-time-set spell list used to maintain the sanity of the one-time call GetSpells
         /// </summary>
         public List<ChampionSpell> Spells

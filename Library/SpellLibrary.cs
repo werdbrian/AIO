@@ -12,6 +12,7 @@ namespace AIO.Library
     ///     Updated 16/12/2014 - 4.21 (Hotfix) 
     ///     Updated 21/02/2015 - 5.3 (Hotfix) 
     ///     Updated 20/03/2015 - 5.5 
+    ///     Updated 29/03/2015 - 5.6 
     /// </summary>
     public static class SpellLibrary
     {
@@ -868,7 +869,7 @@ namespace AIO.Library
                     Delay = 250,
                     Range = 1100,
                     Radius = 55,
-                    MissileSpeed = 1450,
+                    MissileSpeed = 1600,
                     FixedRange = true,
                     AddHitbox = true,
                     DangerValue = 4,
@@ -3201,7 +3202,7 @@ namespace AIO.Library
                     Slot = SpellSlot.Q,
                     Type = SkillShotType.SkillshotMissileLine,
                     Delay = 250,
-                    Range = 850,
+                    Range = 950,
                     Radius = 70,
                     MissileSpeed = 2000,
                     FixedRange = true,

@@ -59,7 +59,7 @@ namespace AIO.Wrapper
                 switch (Type)
                 {
                     case HandleType.OnUpdate:
-                        Game.OnGameUpdate += (EventArgs args) =>
+                        Game.OnUpdate += (EventArgs args) =>
                         {
                             if (Condition != null && Condition(SpellInstance))
                             {
@@ -109,7 +109,11 @@ namespace AIO.Wrapper
             /// <summary>
             ///     Automated handle for healing (self) 
             /// </summary>
-            ON_SELF_HEALTH_BELOW
+            ON_SELF_HEALTH_BELOW, 
+            /// <summary>
+            ///     Automated handle for interrupting important spells 
+            /// </summary>
+            ON_IMPORTANT_CAST
         }
 
         /// <summary>
@@ -603,6 +607,18 @@ namespace AIO.Wrapper
                             spell.Cast(); 
                         }
                     }, (Spell spell) => Instance.IsReady() && HandlerMenu.Item("SelfHeal").GetValue<bool>()); 
+                case HandlerType.ON_IMPORTANT_CAST:
+                    HandlerMenu.AddItem(new MenuItem("Interrupt", "[Auto] Enable Interrupting")).SetValue<bool>(false);
+
+                    return new Handler(Instance, (Spell spell) =>
+                    {
+                        var units = ObjectManager.Get<Obj_AI_Hero>().Where(s => s.IsCastingInterruptableSpell() && s.ServerPosition.Distance(ObjectManager.Player.ServerPosition) < Range);
+
+                        foreach (var unit in units.OrderBy(s => s.ServerPosition.Distance(ObjectManager.Player.ServerPosition)))
+                        {
+                            Cast(unit); 
+                        }
+                    }, (Spell spell) => Instance.IsReady() && HandlerMenu.Item("Interrupt").GetValue<bool>() && ObjectManager.Get<Obj_AI_Hero>().Where(s => s.IsEnemy && s.ServerPosition.Distance(ObjectManager.Player.ServerPosition) < Range && s.IsCastingInterruptableSpell(true)).Count() >= 1);
             }
 
             return null;

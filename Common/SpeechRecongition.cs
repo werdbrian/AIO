@@ -91,7 +91,7 @@ namespace AIO.Common
             Engine.RecognizeAsync(RecognizeMode.Multiple);
             //Engine.Recognize(); 
 
-            Game.OnGameUpdate += Game_OnGameUpdate;
+            Game.OnUpdate += Game_OnGameUpdate;
         }
 
         private static void Engine_SpeechRecognized(object sender, SpeechRecognizedEventArgs e)

@@ -53,6 +53,10 @@ using AIO.Common.Rendering;
  * - Added Rengar, Maokai
  * - Back in work, again... Version updated to 0.006
  * - Removed Winter snow effect 
+ * 
+ * 03/26/2015
+ * - Added Aatrox, Cassiopeia, Lulu
+ * - Added OnLoad to Champion class for custom load actions
  **/
 namespace AIO
 {
@@ -162,12 +166,20 @@ namespace AIO
                 
                 #endregion
 
+                #region HP Damage Indicator OnLoad
                 DamageIndicator = new HpDamageIndicator();
+                #endregion 
 
+                #region Champion#OnLoad call 
+                Champion.OnLoad(); 
+                #endregion
+
+                #region Event registration 
                 SpeechRecongition.OnRecongized += SpeechRecongition_OnRecongized;
                 Configuration.Main.AddToMainMenu();
                 Game.OnUpdate += Game_OnGameUpdate;
                 Drawing.OnEndScene += Drawing_OnEndScene;
+                #endregion
 
                 Logger.Debug(string.Format("Game_OnGameLoad passed, Champion instance created for {0}", ObjectManager.Player.ChampionName));
             }
