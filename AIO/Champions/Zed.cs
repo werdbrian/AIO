@@ -272,12 +272,16 @@ namespace AIO.Champions
             return PerformOnce.A(
                 () =>
                     {
-                        Configuration.Spell.AddItem(new MenuItem("sep", string.Empty));
-                        Configuration.Spell.AddItem(new MenuItem("LongHarass", "Enable Long Harass")).SetValue(false);
-                        Configuration.Spell.AddItem(new MenuItem("ComboType", "Combo Type"))
+                        Configuration.Combo.AddItem(new MenuItem("sep", string.Empty));
+                        Configuration.Combo.AddItem(new MenuItem("AlwaysW", "Use W even if the Target is within AA Range")).SetValue<bool>(true);
+                        Configuration.Combo.AddItem(new MenuItem("ComboType", "Combo Type"))
                             .SetValue<StringList>(new StringList(new[] { "Default", "Line" }));
- 
-                        this.championSpellE.SpellMenu.AddItem(new MenuItem("AutoE", "Enable Auto E")).SetValue(false);
+
+                        Configuration.Harass.AddItem(new MenuItem("sep", string.Empty));
+                        Configuration.Harass.AddItem(new MenuItem("LongHarass", "Enable Long Harass")).SetValue(false);
+
+                        Configuration.Handler.AddItem(new MenuItem("sep", string.Empty));
+                        Configuration.Handler.AddItem(new MenuItem("AutoE", "Enable Auto E")).SetValue(false);
                     });
         }
 
@@ -307,7 +311,7 @@ namespace AIO.Champions
                     if (unit != null && unit.IsValidTarget())
                     {
                         if (this.championSpellE.IsEnabled
-                            && this.championSpellE.SpellMenu.Item("AutoE").GetValue<bool>()
+                            && Configuration.Handler.Item("AutoE").GetValue<bool>()
                             && ((this.ShadowW != null
                                  && this.ShadowW.ServerPosition.Distance(unit.ServerPosition)
                                  <= this.championSpellE.Range)
@@ -327,7 +331,7 @@ namespace AIO.Champions
                                 return;
                             }
 
-                            var option = Configuration.Spell.Item("ComboType").GetValue<StringList>();
+                            var option = Configuration.Combo.Item("ComboType").GetValue<StringList>();
 
                             switch (option.SelectedIndex)
                             {
@@ -414,7 +418,7 @@ namespace AIO.Champions
             else
             {
                 if (this.championSpellW.IsEnabled && this.ShadowStage == ShadowCastStage.First
-                    && unit.Distance(ObjectManager.Player.ServerPosition) > 400
+                    && unit.Distance(ObjectManager.Player.ServerPosition) > (Configuration.Combo.Item("AlwaysW").GetValue<bool>() ? 0 : 400)
                     && unit.Distance(ObjectManager.Player.ServerPosition) < 1300)
                 {
                     this.championSpellW.Cast(unit, false, true);
@@ -453,7 +457,7 @@ namespace AIO.Champions
         {
             var position = unit.Distance(ObjectManager.Player.ServerPosition);
 
-            if (this.championSpellW.IsEnabled_Harass && Configuration.Spell.Item("LongHarass").GetValue<bool>()
+            if (this.championSpellW.IsEnabled_Harass && Configuration.Harass.Item("LongHarass").GetValue<bool>()
                 && this.championSpellW.IsReady() && this.championSpellQ.IsReady()
                 && ObjectManager.Player.Mana
                 > this.championSpellQ.Instance.Instance.ManaCost + this.championSpellW.Instance.Instance.ManaCost
@@ -463,9 +467,8 @@ namespace AIO.Champions
                 this.championSpellW.Cast(unit, false, true);
             }
 
-            if (this.championSpellQ.IsEnabled_Harass && this.ShadowStage != ShadowCastStage.First
-                && this.championSpellQ.IsReady()
-                && (position <= 900 || (this.ShadowW != null && unit.Distance(this.ShadowW.ServerPosition) <= 900)))
+            if (this.championSpellQ.IsEnabled_Harass && this.championSpellQ.IsReady() && (!this.championSpellW.IsEnabled_LastHit || (this.ShadowStage != ShadowCastStage.First
+                && (position <= 900 || (this.ShadowW != null && unit.Distance(this.ShadowW.ServerPosition) <= 900)))))
             {
                 this.championSpellQ.Cast(unit);
             }

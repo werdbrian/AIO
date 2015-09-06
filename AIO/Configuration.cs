@@ -38,7 +38,7 @@ namespace AIO
         /// <summary>
         ///     The _ extra.
         /// </summary>
-        private static Menu extra = null;
+        private static Menu handler = null;
 
         /// <summary>
         ///     The _ main.
@@ -53,8 +53,13 @@ namespace AIO
         /// <summary>
         ///     The _ spell.
         /// </summary>
-        private static Menu spell = null;
+        private static Menu combo = null;
+        private static Menu laneClear = null;
+        private static Menu lastHit = null;
+        private static Menu harass = null;
 
+        private static Menu mode = null;
+        
         #endregion
 
         #region Public Properties
@@ -73,11 +78,11 @@ namespace AIO
         /// <summary>
         ///     "Extra" Configuration Menu
         /// </summary>
-        public static Menu Extra
+        public static Menu Handler
         {
             get
             {
-                return extra ?? (extra = Main.AddSubMenu(new Menu("Extra", "Extra")));
+                return handler ?? (handler = Main.AddSubMenu(new Menu("Handler", "Handler")));
             }
         }
 
@@ -103,17 +108,50 @@ namespace AIO
             }
         }
 
+        public static Menu Mode
+        {
+            get
+            {
+                return mode ?? (mode = Main.AddSubMenu(new Menu("Mode Options", "Mode")));
+            }
+        }
+
         /// <summary>
         ///     "Spell" Configuration Menu
         ///     Note: If instantiated the sub-menu for each spell will be simply "Q, W" etc.
         /// </summary>
-        public static Menu Spell
+        public static Menu Combo
         {
             get
             {
-                return spell ?? (spell = Main.AddSubMenu(new Menu("Spells", "Spells")));
+                return combo ?? (combo = Mode.AddSubMenu(new Menu("Combo", "Combo")));
             }
         }
+
+        public static Menu LaneClear
+        {
+            get
+            {
+                return laneClear ?? (laneClear = Mode.AddSubMenu(new Menu("LaneClear", "Lane Clear")));
+            }
+        }
+
+        public static Menu LastHit
+        {
+            get
+            {
+                return lastHit ?? (lastHit = Mode.AddSubMenu(new Menu("LastHit", "Last Hit")));
+            }
+        }
+
+        public static Menu Harass
+        {
+            get
+            {
+                return harass ?? (harass = Mode.AddSubMenu(new Menu("Harass", "Harass")));
+            }
+        }
+
 
         #endregion
 
@@ -125,8 +163,8 @@ namespace AIO
         public static void Rebuild()
         {
             main = null;
-            spell = null;
-            extra = null;
+            combo = null;
+            handler = null;
             draw = null;
             miscellaneous = null;
         }

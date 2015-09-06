@@ -121,11 +121,11 @@ namespace AIO
 
             if (Champion != null)
             {
-
                 #region Menu OnLoad 
-                DamageIndicator = new HpBarIndicator(ObjectManager.Player);
-                Orbwalker = new Orbwalking.Orbwalker(Configuration.Main.AddSubMenu(new Menu("Orbwalk", "Orbwalk")));
 
+                Orbwalker = new Orbwalking.Orbwalker(Configuration.Main.AddSubMenu(new Menu("Orbwalk", "Orbwalk")));
+                DamageIndicator = new HpBarIndicator(ObjectManager.Player);
+                
                 Configuration.Draw.AddItem(new MenuItem("Indicator", "HP Damage Indicator"))
                     .SetValue<bool>(true)
                     .ValueChanged += (a, b) =>
@@ -185,13 +185,13 @@ namespace AIO
                     var circle = new Render.Circle(ObjectManager.Player, spell.Range, Color.AliceBlue);
 
                     Configuration.Draw.AddItem(
-                        new MenuItem(spell.SpellString, string.Format("Draw {0}", spell.SpellString)))
+                        new MenuItem(spell.String, string.Format("Draw {0}", spell.String)))
                         .SetValue<Circle>(new Circle(false, Color.Aqua, spell.Range))
                         .ValueChanged += (a, b) => { circle.Color = b.GetNewValue<Circle>().Color; };
 
                     circle.VisibleCondition =
                         (a) =>
-                        Configuration.Draw.Item(spell.SpellString).GetValue<Circle>().Active
+                        Configuration.Draw.Item(spell.String).GetValue<Circle>().Active
                         && ObjectManager.Player.IsVisible;
 
                     circle.Add();
@@ -380,14 +380,14 @@ namespace AIO
             {
                 Logger.Debug(string.Format("Speech {0} recongized as a Champion Spell...", output));
 
-                var Spell = Champion.GetList().FirstOrDefault(s => s.SpellString.Equals(output.Replace("Cast ", string.Empty)));
+                var Spell = Champion.GetList().FirstOrDefault(s => s.String.Equals(output.Replace("Cast ", string.Empty)));
 
                 if (Spell != null && Spell.IsEnabled && Spell.Instance.IsReady())
                 {
                     Logger.Debug(
                         string.Format(
                             "Recongized spell {0} from speech... Found spell & IsEnabled & IsReady", 
-                            Spell.SpellString));
+                            Spell.String));
 
                     var Target = Selector.GetTarget((float)Champion.LongestRange);
 
@@ -401,7 +401,7 @@ namespace AIO
                     Logger.Debug(
                         string.Format(
                             "Recongized spell {0} from speech... Is not ready or enabled, thus ignored.", 
-                            Spell.SpellString));
+                            Spell.String));
                 }
                 else
                 {

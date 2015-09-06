@@ -46,13 +46,12 @@ namespace AIO.Champions
             return PerformOnce.A(
                 () =>
                     {
-                        Configuration.Spell.SubMenu("W")
-                            .AddItem(
-                                new MenuItem("AbsorbPercent", "Absorb Percentage").SetValue<Slider>(
+                        Configuration.Main.AddItem(new MenuItem("sep", string.Empty));
+                        Configuration.Main.AddItem(
+                                new MenuItem("AbsorbPercent", "W Absorb Percentage").SetValue<Slider>(
                                     new Slider(75, 0, 100)));
-                        Configuration.Spell.SubMenu("W")
-                            .AddItem(
-                                new MenuItem("DamagePercent", "Damage Percentage").SetValue<Slider>(
+                        Configuration.Main.AddItem(
+                                new MenuItem("DamagePercent", "W Damage Percentage").SetValue<Slider>(
                                     new Slider(75, 0, 100)));
                     });
         }
@@ -87,8 +86,8 @@ namespace AIO.Champions
 
             W.CastCondition = (unit) =>
                 {
-                    var healPercent = W.SpellMenu.Item("AbsorbPercent").GetValue<Slider>();
-                    var damagePercent = W.SpellMenu.Item("DamagePercent").GetValue<Slider>();
+                    var healPercent = Configuration.Main.Item("AbsorbPercent").GetValue<Slider>();
+                    var damagePercent = Configuration.Main.Item("DamagePercent").GetValue<Slider>();
                     var currentPercent = ObjectManager.Player.HealthPercentage();
                     var name = ObjectManager.Player.GetSpell(SpellSlot.W).Name;
 
@@ -96,6 +95,11 @@ namespace AIO.Champions
                                ? healPercent.Value > currentPercent
                                : currentPercent > damagePercent.Value;
                 };
+
+            result.Add(Q);
+            result.Add(W);
+            result.Add(E);
+            result.Add(R);
 
             return result;
         }

@@ -301,7 +301,7 @@ namespace AIO.Wrapper
         {
             get
             {
-                return this.SpellMenu.SubMenu("Handler");
+                return Configuration.Handler.SubMenu(String);
             }
         }
 
@@ -312,12 +312,12 @@ namespace AIO.Wrapper
         {
             get
             {
-                return this.SpellMenu.Item("Enabled").GetValue<bool>();
+                return Configuration.Combo.Item("Enabled" + this.String).GetValue<bool>();
             }
 
             set
             {
-                this.SpellMenu.Item("Enabled").SetValue<bool>(value);
+                Configuration.Combo.Item("Enabled" + this.String).SetValue<bool>(value);
             }
         }
 
@@ -328,12 +328,12 @@ namespace AIO.Wrapper
         {
             get
             {
-                return this.SpellMenu.Item("Harass").GetValue<bool>();
+                return Configuration.Harass.Item("Enabled" + this.String).GetValue<bool>();
             }
 
             set
             {
-                this.SpellMenu.Item("Harass").SetValue<bool>(value);
+                Configuration.Harass.Item("Enabled" + this.String).SetValue<bool>(value);
             }
         }
 
@@ -344,12 +344,12 @@ namespace AIO.Wrapper
         {
             get
             {
-                return this.SpellMenu.Item("LaneClear").GetValue<bool>();
+                return Configuration.LaneClear.Item("Enabled" + this.String).GetValue<bool>();
             }
 
             set
             {
-                this.SpellMenu.Item("LaneClear").SetValue<bool>(value);
+                Configuration.LaneClear.Item("Enabled" + this.String).GetValue<bool>();
             }
         }
 
@@ -360,12 +360,12 @@ namespace AIO.Wrapper
         {
             get
             {
-                return this.SpellMenu.Item("LastHit").GetValue<bool>();
+                return Configuration.LastHit.Item("Enabled" + this.String).GetValue<bool>();
             }
 
             set
             {
-                this.SpellMenu.Item("LastHit").SetValue<bool>(value);
+                Configuration.LastHit.Item("Enabled" + this.String).GetValue<bool>();
             }
         }
 
@@ -397,18 +397,19 @@ namespace AIO.Wrapper
         /// <summary>
         ///     References the specified sub menu created during instantiation of the ChampionSpell
         /// </summary>
+        [Obsolete("Not used", true)]
         public Menu SpellMenu
         {
             get
             {
-                return Configuration.Spell.SubMenu(this.SpellString);
+                return Configuration.Combo.SubMenu(this.String);
             }
         }
 
         /// <summary>
-        ///     String instance of the specified ChampionSpell
+        ///     Gets instance of the specified ChampionSpell
         /// </summary>
-        public string SpellString
+        public string String
         {
             get
             {
@@ -492,33 +493,32 @@ namespace AIO.Wrapper
         /// </summary>
         public void AddToMenu()
         {
-            Configuration.Spell.AddSubMenu(new Menu(this.SpellString, this.SpellString));
-
-            this.SpellMenu.AddSubMenu(new Menu("Automatic Handlers", "Handler"));
-
-            this.SpellMenu.AddItem(new MenuItem("DisableAll", "Disable all Automatic Handlers").SetValue<bool>(false));
-            this.SpellMenu.AddItem(new MenuItem("Enabled", "Enabled").SetValue<bool>(this.Slot != SpellSlot.R));
-            this.SpellMenu.AddItem(new MenuItem("LaneClear", "Enable LaneClear")).SetValue<bool>(false);
-            this.SpellMenu.AddItem(new MenuItem("LastHit", "Enable LastHit")).SetValue<bool>(false);
+            Configuration.Combo.AddItem(new MenuItem("Enabled" + this.String, string.Format("Enable use of {0}", this.String)).SetValue<bool>(this.Slot != SpellSlot.R));
 
             if (this.Slot != SpellSlot.R)
             {
-                this.SpellMenu.AddItem(new MenuItem("Harass", "Enable Harass")).SetValue<bool>(false);
+                Configuration.LaneClear.AddItem(new MenuItem("Enabled" + this.String, string.Format("Enable use of {0}", this.String)).SetValue<bool>(false));
+                Configuration.LastHit.AddItem(new MenuItem("Enabled" + this.String, string.Format("Enable use of {0}", this.String)).SetValue<bool>(false));
+                Configuration.Harass.AddItem(new MenuItem("Enabled" + this.String, string.Format("Enable use of {0}", this.String)).SetValue<bool>(false));
             }
 
-            this.SpellMenu.Item("DisableAll").ValueChanged += (object sender, OnValueChangeEventArgs args) =>
-                {
-                    if (args.GetNewValue<bool>())
+            Configuration.Handler.AddSubMenu(new Menu(string.Format("{0}: Automatic Handlers", String), String));
+
+            HandlerMenu.AddItem(new MenuItem("DisableAll", "Disable all Automatic Handlers").SetValue<bool>(false)).ValueChanged +=
+                (a, b) =>
                     {
-                        foreach (var item in this.HandlerMenu.Items)
+                        if (b.GetNewValue<bool>())
                         {
-                            if (item.DisplayName.ToLower().Contains("enable"))
+                            foreach (var item in this.HandlerMenu.Items)
                             {
-                                item.SetValue<bool>(false);
+                                if (item.DisplayName.ToLower().Contains("enable"))
+                                {
+                                    item.SetValue<bool>(false);
+                                }
                             }
                         }
-                    }
-                };
+                    };
+
         }
 
         /// <summary>
