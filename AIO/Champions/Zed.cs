@@ -470,6 +470,7 @@ namespace AIO.Champions
             if (this.championSpellQ.IsEnabled_Harass && this.championSpellQ.IsReady() && (!this.championSpellW.IsEnabled_LastHit || (this.ShadowStage != ShadowCastStage.First
                 && (position <= 900 || (this.ShadowW != null && unit.Distance(this.ShadowW.ServerPosition) <= 900)))))
             {
+                Console.WriteLine("q HARASS");
                 this.championSpellQ.Cast(unit);
             }
 
@@ -478,15 +479,18 @@ namespace AIO.Champions
                 > this.championSpellQ.Instance.Instance.ManaCost + this.championSpellW.Instance.Instance.ManaCost
                 && position < 750)
             {
+                Console.WriteLine("w HARASS");
                 this.championSpellW.Cast(unit, false, true);
             }
 
             if (this.championSpellE.IsEnabled_Harass)
             {
+                Console.WriteLine("e HARASS");
                 this.championSpellE.Cast(unit);
 
                 if (this.ShadowW != null && unit.Distance(this.ShadowW.ServerPosition) < this.championSpellE.Range)
                 {
+                    Console.WriteLine("e shadow HARASS");
                     this.championSpellE.Instance.Cast();
                 }
             }
