@@ -456,7 +456,17 @@ namespace AIO.Champions
         private void PerformHarass(Obj_AI_Base unit)
         {
             var position = unit.Distance(ObjectManager.Player.ServerPosition);
+            if (this.championSpellE.IsEnabled_Harass)
+            {
+                Console.WriteLine("e HARASS");
+                this.championSpellE.Cast(unit);
 
+                if (this.ShadowW != null && unit.Distance(this.ShadowW.ServerPosition) < this.championSpellE.Range)
+                {
+                    Console.WriteLine("e shadow HARASS");
+                    this.championSpellE.Instance.Cast();
+                }
+            }
             if (this.championSpellW.IsEnabled_Harass && Configuration.Harass.Item("LongHarass").GetValue<bool>()
                 && this.championSpellW.IsReady() && this.championSpellQ.IsReady()
                 && ObjectManager.Player.Mana
@@ -481,19 +491,10 @@ namespace AIO.Champions
             {
                 Console.WriteLine("w HARASS");
                 this.championSpellW.Cast(unit, false, true);
+                this.championSpellE.Instance.Cast();
             }
 
-            if (this.championSpellE.IsEnabled_Harass)
-            {
-                Console.WriteLine("e HARASS");
-                this.championSpellE.Cast(unit);
-
-                if (this.ShadowW != null && unit.Distance(this.ShadowW.ServerPosition) < this.championSpellE.Range)
-                {
-                    Console.WriteLine("e shadow HARASS");
-                    this.championSpellE.Instance.Cast();
-                }
-            }
+            
         }
 
         /// <summary>
