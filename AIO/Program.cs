@@ -262,6 +262,7 @@ namespace AIO
 
                     foreach (var spell in Champion.Spells.Where(spell => spell.Instance.IsReady() && spell.IsEnabled))
                     {
+                        Console.WriteLine("combo casting spell");
                         spell.Cast(target);
                     }
 
@@ -272,6 +273,7 @@ namespace AIO
                     if (laneClearSpell != null)
                     {
                         laneClearSpell.LaneClear();
+                         Console.WriteLine("laneclear casting spell");
                     }
 
                     break;
@@ -281,6 +283,7 @@ namespace AIO
                     if (lastHitSpell != null)
                     {
                         lastHitSpell.LaneClear();
+                         Console.WriteLine("last hit casting spell");
                     }
 
                     break;
@@ -293,6 +296,8 @@ namespace AIO
                     foreach (
                         var spell in Champion.Spells.Where(spell => spell.Instance.IsReady() && spell.IsEnabled_Harass))
                     {
+                       Console.WriteLine("garass hit casting spell");
+
                         spell.Cast(target);
                     }
 
